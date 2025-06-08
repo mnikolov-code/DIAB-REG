@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Најава</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f5f7fa;
+    }
+    .login-container {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 380px;
+    }
+    h2 {
+      color: #2d3748;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #4a5568;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #4299e1;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #3182ce;
+    }
+    .error {
+      color: #e53e3e;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Админ Најава</h2>
+    <form id="loginForm">
+    <label>
+      Корисничко име:
+      <input type="text" name="username" required>
+    </label>
+    <label>
+      Лозинка:
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit">Најави се</button>
+    <div id="errorMsg" class="error"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new URLSearchParams(new FormData(form));
+      const res = await fetch('/login', { method: 'POST', body: data });
+      if (res.ok) {
+        window.location.href = '/admin';
+      } else {
+        document.getElementById('errorMsg').textContent = await res.text();
+      }
+    });
+  </script>
+</body>
+</html>

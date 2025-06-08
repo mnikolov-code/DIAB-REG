@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DIAB-REG Application</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --primary-dark: #1a252f;
+      --secondary: #3498db;
+      --light: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --dark: #2c3e50;
+      --dark-gray: #95a5a6;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --search-bg: #f8f9fa;
+    }
+    body {
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f7fa;
+      color: #34495e;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      border-bottom: 1px solid var(--primary-dark);
+    }
+    .header h1 {
+      margin: 0;
+      font-weight: 500;
+    }
+    .logout-btn {
+      color: white;
+      background: rgba(255,255,255,0.15);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.25);
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    th, td {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 20px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background: var(--primary);
+      color: white;
+      font-weight: 500;
+    }
+    tr:nth-child(even) {
+      background-color: var(--light-gray);
+    }
+    tr:hover {
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+    select, button, a {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    button {
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 100px;
+    }
+    .save-btn {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      margin-left: 8px;
+    }
+    .save-btn:hover {
+      background-color: #228176;
+    }
+    .issue-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+    }
+    .issue-btn:hover {
+      background-color: #005b91;
+    }
+    button[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .action-bar, .search-section {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .filter-group h4 {
+      margin: 0 0 5px 0;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #555;
+      cursor: pointer;
+    }
+
+    #searchField {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      background: var(--search-bg);
+    }
+
+    .filter-group input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: var(--search-bg);
+    }
+    .refresh-btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+    }
+    .logs-btn {
+      background-color: var(--warning);
+      color: var(--dark);
+      border: none;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-top: 20px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Навигација и форми (login, register, apply etc.) -->
+  <div id="afterLoginSection" class="hidden">
+    <!-- … form за поднесување апликации … -->
+    <h2>Мои апликации</h2>
+    <button id="btnLoadMyApps">Прикажи ги моите апликации</button>
+    <table id="myAppsTable">
+      <thead>
+        <tr>
+          <th>ID</th><th>Датум</th><th>Product</th><th>Status</th><th>Cert. No.</th><th>Преглед</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let token = null;
+    // … login/register/apply …
+    document.getElementById('btnLoadMyApps').addEventListener('click', async () => {
+      if(!token) return alert('Најави се прво');
+      const res = await fetch('/api/my/applications', {
+        headers:{ 'Authorization':'Bearer '+token }
+      });
+      if(!res.ok) return alert('Грешка: '+await res.text());
+      const apps = await res.json();
+      const tbody = document.querySelector('#myAppsTable tbody');
+      tbody.innerHTML = apps.map(app => `
+        <tr>
+          <td>${app._id}</td>
+          <td>${ new Date(app.createdAt).toLocaleString('mk-MK') }</td>
+          <td>${app.product}</td>
+          <td>${app.status}</td>
+          <td>${app.cert_number||'-'}</td>
+          <td>${
+            app.cert_number
+              ? `<a
+  href="/api/certificate/public/pdf/${app._id}"
+  target="_blank"
+  rel="noopener"
+>
+  Прегледај сертификат
+</a>
+`
+              : '-'
+          }</td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

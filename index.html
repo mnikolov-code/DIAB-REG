@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DIAB-REG Application</title>
+  <style>
+    body { font-family:'Segoe UI',Arial,sans-serif; margin:0; padding:20px; background:#f5f5f5; }
+    .wrapper { max-width:800px; margin:0 auto; background:#fff; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); padding:30px; }
+    .hidden { display:none; }
+    .card-container { display:flex; gap:20px; justify-content:center; margin:30px 0; }
+    .card { flex:1; padding:25px; border:2px solid #0056b3; border-radius:8px;
+            text-align:center; font-size:1.2rem; color:#0056b3; cursor:pointer; 
+            transition:all 0.3s ease; min-height:150px; display:flex; align-items:center; justify-content:center;
+            flex-direction: column; }
+    .card:hover { background:#e6f0ff; transform:translateY(-2px); box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+    .form-container { background:#fff; border-radius:8px; padding:25px; margin-top:20px; border:1px solid #ddd; }
+    form { max-width:500px; margin:0 auto; }
+    label { display:block; margin:15px 0 5px; font-weight:500; color:#333; }
+    input { width:100%; padding:12px; margin-bottom:20px; font-size:1rem; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; }
+    button { width:100%; padding:12px; margin:10px 0; background:#0056b3; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:1rem; transition:background 0.3s; }
+    button:hover { background:#003d82; }
+    .back-btn { background:#f0f8ff; border:1px solid #0056b3; color:#0056b3; cursor:pointer; 
+                font-size:1rem; padding:8px 15px; border-radius:4px; margin-bottom:20px;
+                transition: background 0.3s; }
+    .back-btn:hover { background:#e1f0ff; }
+    h1 { margin-top:0; color:#0056b3; }
+    h2 { border-bottom:1px solid #eee; padding-bottom:10px; margin-top:0; }
+    /* Мои апликации табела */
+    #myAppsSection table { width:100%; border-collapse:collapse; margin-top:20px; }
+    #myAppsSection th, #myAppsSection td { border:1px solid #ddd; padding:8px; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>DIAB-REG Систем за сертификација</h1>
+      <p>Сертификација и регулација на дијабетички производи</p>
+      <button id="btnMyApps" class="hidden">Мои апликации</button>
+    </header>
+
+    <!-- Initial Selection -->
+    <div id="initialSection">
+      <div class="card-container">
+        <div id="showLoginBtn" class="card">
+          <div>
+            <h3>Најави се</h3>
+            <p>Имате постоечки профил?</p>
+          </div>
+        </div>
+        <div id="showRegisterBtn" class="card">
+          <div>
+            <h3>Регистрирај се</h3>
+            <p>Нов корисник?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Login -->
+  <div id="loginSection" class="hidden">
+    <button id="backFromLogin" class="back-btn">&larr; Врати се на почеток</button>
+    <div class="form-container">
+      <h2>Најава</h2>
+      <form id="loginForm">
+        <label>Матичен број (ЕМБС)</label>
+        <input type="text" id="loginMat" required placeholder="Внесете го вашиот матичен број"/>
+        
+        <label>Лозинка</label>
+        <input type="password" id="loginPass" required placeholder="Внесете ја вашата лозинка"/>
+        
+        <button type="submit">Најави се</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Registration -->
+  <div id="registerSection" class="hidden">
+    <button id="backFromRegister" class="back-btn">&larr; Врати се на почеток</button>
+    <div class="form-container">
+      <h2>Регистрација</h2>
+      <form id="registerForm">
+        <label>Матичен број (ЕМБС)</label>
+        <input type="text" name="matichen_broj" required placeholder="Внесете го вашиот матичен број"/>
+        
+        <label>Име на компанија</label>
+        <input type="text" name="name" required placeholder="Внесете го името на компанијата"/>
+        
+        <label>Е-пошта</label>
+        <input type="email" name="email" required placeholder="Внесете ја вашата е-пошта"/>
+        
+        <label>Лозинка</label>
+        <input type="password" name="password" required placeholder="Креирајте лозинка"/>
+        
+        <button type="submit">Регистрирај се</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- After Login -->
+  <div id="afterLoginSection" class="hidden">
+    <button id="backFromAfterLogin" class="back-btn">&larr; Одјави се</button>
+    <div class="form-container">
+      <h2>Добредојдовте!</h2>
+      <p>Можете да поднесувате апликации и да ги проверувате статусите на вашите сертификати.</p>
+      
+      <!-- Application -->
+      <div id="applySection" style="margin-top:30px;">
+        <h3>Поднеси нова апликација</h3>
+        <form id="applicationForm" enctype="multipart/form-data">
+          <label>Контакт лице</label>
+          <input type="text" name="contact" required placeholder="Внесете име на контакт лице"/>
+          
+          <label>Контакт е-пошта</label>
+          <input type="email" name="email" required placeholder="Внесете контакт е-пошта"/>
+          
+          <label>Име на продукт</label>
+          <input type="text" name="product" required placeholder="Внесете име на продуктот"/>
+          
+          <label>Прикачете документи</label>
+          <input type="file" name="docs" multiple required style="padding:8px; border:none;"/>
+          
+          <button type="submit">Поднеси апликација</button>
+        </form>
+      </div>
+      
+      <!-- Status Check -->
+      <div id="statusSection" style="margin-top:40px;">
+        <hr/>
+        <h3>Проверка статус</h3>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:15px;">
+          <input type="text" id="statusId" placeholder="Внесете ID на апликацијата" style="flex:1;"/>
+          <button id="checkBtn" style="width:auto; padding:0 20px;">Провери</button>
+        </div>
+        <div id="statusResult" style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:4px;"></div>
+        <button type="button" class="back-btn" style="margin-top:20px; width:auto;">&larr; Назад</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Мои апликации -->
+  <div id="myAppsSection" class="hidden">
+    <button id="backFromMyApps" class="back-btn">&larr; Назад</button>
+    <h2>Мои апликации</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Датум</th><th>Продукт</th><th>Статус</th><th>Cert No.</th><th>Преглед</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let token = null;
+    const initial   = document.getElementById('initialSection');
+    const loginSec  = document.getElementById('loginSection');
+    const regSec    = document.getElementById('registerSection');
+    const after     = document.getElementById('afterLoginSection');
+    const btnMyApps = document.getElementById('btnMyApps');
+    const myAppsSec = document.getElementById('myAppsSection');
+
+    // Навигација меѓу делови
+    document.getElementById('backFromAfterLogin').onclick = () => {
+      after.classList.add('hidden');
+      myAppsSec.classList.add('hidden');
+      initial.classList.remove('hidden');
+      btnMyApps.classList.add('hidden');
+      token = null;
+    };
+    document.getElementById('showLoginBtn').onclick = () => {
+      initial.classList.add('hidden');
+      loginSec.classList.remove('hidden');
+    };
+    document.getElementById('backFromLogin').onclick = () => {
+      loginSec.classList.add('hidden');
+      initial.classList.remove('hidden');
+    };
+    document.getElementById('showRegisterBtn').onclick = () => {
+      initial.classList.add('hidden');
+      regSec.classList.remove('hidden');
+    };
+    document.getElementById('backFromRegister').onclick = () => {
+      regSec.classList.add('hidden');
+      initial.classList.remove('hidden');
+    };
+
+    // 1) Регистрација
+    document.getElementById('registerForm')
+      .addEventListener('submit', async e => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target).entries());
+        const res  = await fetch('/api/auth/register', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Регистрација успешна! Најави се.');
+          regSec.classList.add('hidden');
+          loginSec.classList.remove('hidden');
+        } else {
+          alert('Грешка: '+(json.error||''));
+        }
+    });
+
+    // 2) Логин
+    document.getElementById('loginForm')
+      .addEventListener('submit', async e => {
+        e.preventDefault();
+        const body = {
+          matichen_broj: document.getElementById('loginMat').value,
+          password:      document.getElementById('loginPass').value
+        };
+        const res  = await fetch('/api/auth/login', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (json.token) {
+          token = json.token;
+          alert('Најава успешна!');
+          loginSec.classList.add('hidden');
+          after.classList.remove('hidden');
+          btnMyApps.classList.remove('hidden');         // покажи го копчето
+        } else {
+          alert('Login failed: '+(json.error||''));
+        }
+    });
+
+    // 3) Поднеси апликација
+    document.getElementById('applicationForm')
+      .addEventListener('submit', async e => {
+        e.preventDefault();
+        if (!token) return alert('Најави се прво');
+        const fd = new FormData(e.target);
+        const res = await fetch('/api/apply', {
+          method:'POST',
+          headers:{'Authorization':'Bearer '+token},
+          body: fd
+        });
+        const json = await res.json();
+        if (json.id) alert('Испратено! ID='+json.id);
+        else         alert('Грешка: '+(json.error||''));
+    });
+
+    // 4) Проверка статус
+    document.getElementById('checkBtn')
+      .addEventListener('click', async () => {
+        const id   = document.getElementById('statusId').value;
+        const res  = await fetch('/api/status/'+id);
+        const json = await res.json();
+        const r    = document.getElementById('statusResult');
+        if (!json.found) {
+          r.innerText='Не пронајдено.';
+          return;
+        }
+        const { status, company, cert_number } = json.application;
+        let txt = `ID: ${id}\nСтатус: ${status}\nCompany: ${company}`;
+        if (status==='Completed' && cert_number) {
+          r.innerHTML = txt.replace(/\n/g,'<br>')+
+            `<br><br><a href="/api/certificate/view/${encodeURIComponent(cert_number)}" target="_blank">
+
+               Превземи сертификат ${cert_number}
+             </a>`;
+        } else {
+          r.innerText = txt;
+        }
+    });
+
+    // 5) Мои апликации
+    document.getElementById('backFromMyApps').onclick = () => {
+      myAppsSec.classList.add('hidden');
+      after.classList.remove('hidden');
+    };
+    btnMyApps.addEventListener('click', async () => {
+      if (!token) return alert('Најави се прво');
+      // скриј ги другите секции
+      after.classList.add('hidden');
+      myAppsSec.classList.remove('hidden');
+
+      const res = await fetch('/api/my/applications', {
+        headers:{'Authorization':'Bearer '+token}
+      });
+      if (!res.ok) return alert('Грешка при вчитување апликации');
+      const apps = await res.json();
+      const tb = myAppsSec.querySelector('tbody');
+      tb.innerHTML = apps.map(app => {
+        const date = new Date(app.createdAt).toLocaleString('mk-MK');
+        const cert = app.cert_number
+  ? `<a href="/api/certificate/pdf/${app._id}" target="_blank">${app.cert_number}</a>`
+  : '-';
+
+        const view = app.cert_number
+          ? `<a href="/api/certificate/pdf/${encodeURIComponent(app.cert_number)}" target="_blank">Преглед</a>`
+          : '-';
+        return `
+          <tr>
+            <td>${app._id}</td>
+            <td>${date}</td>
+            <td>${app.product}</td>
+            <td>${app.status}</td>
+            <td>${cert}</td>
+            <td>${view}</td>
+          </tr>`;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

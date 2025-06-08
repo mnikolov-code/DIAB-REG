@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diabetic Products Certification System</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --primary-dark: #1a252f;
+      --secondary: #3498db;
+      --light: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --dark: #2c3e50;
+      --dark-gray: #95a5a6;
+      --success: #27ae60;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --search-bg: #f8f9fa;
+    }
+    body {
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f7fa;
+      color: #34495e;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      border-bottom: 1px solid var(--primary-dark);
+    }
+    .header h1 {
+      margin: 0;
+      font-weight: 500;
+    }
+    .logout-btn {
+      color: white;
+      background: rgba(255,255,255,0.15);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.25);
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    th, td {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 15px 20px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background: var(--primary);
+      color: white;
+      font-weight: 500;
+    }
+    tr:nth-child(even) {
+      background-color: var(--light-gray);
+    }
+    tr:hover {
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+    select, button, a {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    button {
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 100px;
+    }
+    .save-btn {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      margin-left: 8px;
+    }
+    .save-btn:hover {
+      background-color: #228176;
+    }
+    .issue-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+    }
+    .issue-btn:hover {
+      background-color: #005b91;
+    }
+    button[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .action-bar, .search-section {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .filter-group h4 {
+      margin: 0 0 5px 0;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #555;
+      cursor: pointer;
+    }
+
+    #searchField {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      background: var(--search-bg);
+    }
+
+    .filter-group input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: var(--search-bg);
+    }
+    .refresh-btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+    }
+    .logs-btn {
+      background-color: var(--warning);
+      color: var(--dark);
+      border: none;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-top: 20px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Diabetic Products Certification System</h1>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+  <div class="container">
+    <div class="action-bar">
+      <button id="refreshBtn" class="refresh-btn">⟳ Refresh Data</button>
+      <button id="toggleLogsBtn" class="logs-btn">📋 Show Logs</button>
+    </div>
+
+    <div id="logsSection" class="card" style="display:none;">
+      <h2>Administrative Action Logs</h2>
+    <table id="logsTable">
+      <thead>
+        <tr>
+          <th>Корисник</th><th>Акција</th><th>Item ID</th><th>Време</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+    <div class="card">
+      <h2>Product Certification Applications</h2>
+      
+      <div class="search-section">
+        <div class="filter-options">
+          <div class="filter-group">
+            <h4>Filter by Status:</h4>
+            <label><input type="checkbox" name="status" value="Pending" checked> Pending</label>
+            <label><input type="checkbox" name="status" value="In Process" checked> In Process</label>
+            <label><input type="checkbox" name="status" value="Certifying" checked> Certifying</label>
+            <label><input type="checkbox" name="status" value="Completed" checked> Completed</label>
+          </div>
+		  <div class="filter-group">
+  <h4>Filter by Date:</h4>
+  <label>Од:<input type="date" id="dateFrom" /></label>
+  <label>До:<input type="date" id="dateTo" /></label>
+</div>
+
+          <div class="filter-group">
+            <h4>Quick Search:</h4>
+            <input type="text" id="searchField" placeholder="Company, Product, Email...">
+          </div>
+        </div>
+      </div>
+
+      <table id="appsTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>Created At</th><th>Company</th><th>Product</th><th>Contact</th><th>Email</th>
+        <th>Status</th><th>Cert. No.</th><th>Files</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Вчитување апликации
+    async function loadApplications() {
+      const btn = document.getElementById('refreshBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/admin/applications?_sort=-createdAt');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const apps = await res.json();
+        const tbody = document.querySelector('#appsTable tbody');
+        tbody.innerHTML = apps.length
+          ? apps.map(app => {
+              const files = (app.docs||[]).map(f =>
+  // plain filename in URL, plus `download` attribute so the browser will fetch and render it
+  `<a href="/uploads/${f}" target="_blank">${f}</a>
+`
+).join('<br>') || '-';
+
+              const cert = app.cert_number
+                ? `<a href="/api/certificate/pdf/${app._id}" target="_blank">${app.cert_number}</a>`
+                : '-';
+              const issueDis = app.status==='Completed'?'':'disabled';
+              return `
+                <tr>
+                  <td>${app._id}</td>
+                  <td>${(function(){
+  // ако има п Timestamp, користи го; ако не – читај го од ObjectId
+  const ts = app.createdAt
+           ? new Date(app.createdAt)
+           : new Date(parseInt(app._id.substring(0,8),16) * 1000);
+  return ts.toLocaleString('mk-MK');
+})()}</td>
+                  <td>${app.company.name} (${app.company.matichen_broj})</td>
+                  <td>${app.product}</td>
+                  <td>${app.contact}</td>
+                  <td>${app.email}</td>
+                  <td>
+                    <select data-id="${app._id}" class="status-select">
+                      ${['Pending','In Process','Certifying','Completed']
+                        .map(s=>`<option value="${s}" ${app.status===s?'selected':''}>${s}</option>`)
+                        .join('')}
+                    </select>
+                    <button class="save-btn" data-id="${app._id}" disabled>Save</button>
+                  </td>
+                  <td>${cert}</td>
+                  <td>${files}</td>
+                  <td>
+                    <button data-id="${app._id}" class="issue-btn" ${issueDis}>
+                      Issue Cert
+                    </button>
+                    <button onclick="
+                      window.location.href =
+                        'mailto:${app.email}?subject=' +
+                        encodeURIComponent('Информација за продукт ${app.product}')
+                    ">
+                      Испрати
+                    </button>
+                  </td>
+                </tr>`;
+            }).join('')
+          : '<tr><td colspan="10">Нема апликации.</td></tr>';
+        document.querySelectorAll('.status-select').forEach(sel => {
+          sel.addEventListener('change', () => {
+            document.querySelector(`.save-btn[data-id="${sel.dataset.id}"]`).disabled = false;
+          });
+        });
+        document.querySelectorAll('.save-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const sel = document.querySelector(`.status-select[data-id="${id}"]`);
+            try {
+              const r = await fetch(`/api/admin/applications/${id}/status`, {
+                method:'PATCH',
+                headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({status:sel.value, notify:true})
+              });
+              if (!r.ok) throw new Error(`HTTP ${r.status}`);
+              loadApplications();
+            } catch(e) {
+              alert('Грешка при Save: '+e.message);
+            }
+          });
+        });
+        document.querySelectorAll('.issue-btn').forEach(btn=>{
+          btn.addEventListener('click',()=> {
+            window.open(`/api/certificate/pdf/${btn.dataset.id}`, '_blank');
+          });
+        });
+      } catch(e) {
+        alert('Не успеа да се вчитаат апликациите: '+e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Toggle и вчитување логови
+    document.getElementById('toggleLogsBtn').addEventListener('click', async () => {
+      const sec = document.getElementById('logsSection');
+      const btn = document.getElementById('toggleLogsBtn');
+      if (sec.style.display==='none') {
+        try {
+          const res = await fetch('/api/admin/logs');
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const logs = await res.json();
+          document.querySelector('#logsTable tbody').innerHTML = logs.map(l=>
+            `<tr>
+              <td>${l.user}</td>
+              <td>${l.action}</td>
+              <td>${l.itemId||''}</td>
+              <td>${new Date(l.timestamp).toLocaleString('mk-MK')}</td>
+            </tr>`
+          ).join('');
+          sec.style.display='block';
+          btn.textContent='Сокриј Логови';
+        } catch(e) {
+          alert('Грешка при вчитување на логови: '+e.message);
+        }
+      } else {
+        sec.style.display='none';
+        btn.textContent='Прикажи Логови';
+      }
+    });
+
+    // Filter applications
+    function filterApplications() {
+      const searchText = document.getElementById('searchField').value.toLowerCase();
+      const statusFilters = Array.from(document.querySelectorAll('input[name="status"]:checked'))
+                               .map(checkbox => checkbox.value);
+      const rows = document.querySelectorAll('#appsTable tbody tr');
+      
+      rows.forEach(row => {
+        const status = row.querySelector('.status-select').value;
+        const cells = row.querySelectorAll('td');
+        let showRow = statusFilters.includes(status);
+        
+        if (showRow && searchText) {
+          showRow = [2, 3, 4, 5, 7].some(index => 
+            cells[index].textContent.toLowerCase().includes(searchText)
+          );
+        }
+        
+        row.style.display = showRow ? '' : 'none';
+      });
+    }
+function filterApplications() {
+  const searchText    = document.getElementById('searchField').value.toLowerCase();
+  const statusFilters = Array.from(
+    document.querySelectorAll('input[name="status"]:checked')
+  ).map(cb => cb.value);
+  const dateFromVal   = document.getElementById('dateFrom').value;  // yyyy-MM-dd
+  const dateToVal     = document.getElementById('dateTo').value;
+  const fromTs        = dateFromVal ? new Date(dateFromVal).getTime() : null;
+  const toTs          = dateToVal   ? new Date(dateToVal).getTime()   : null;
+  const rows          = document.querySelectorAll('#appsTable tbody tr');
+
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    // 1) статус филтер
+    const status = row.querySelector('.status-select').value;
+    let ok = statusFilters.includes(status);
+
+    // 2) текст филтер
+    if (ok && searchText) {
+      ok = [2,3,4,5,7].some(i =>
+        cells[i].textContent.toLowerCase().includes(searchText)
+      );
+    }
+
+    // 3) датум филтер
+    if (ok && (fromTs || toTs)) {
+      // земи timestamp од <td> Created At
+      const dateCell = cells[1].textContent; // „DD.MM.YYYY, hh:mm:ss“
+      const cellTs   = new Date(dateCell.replace(/(\d+)\.(\d+)\.(\d+),/, '$2/$1/$3,')).getTime();
+      // проверка
+      if (fromTs !== null && cellTs < fromTs) ok = false;
+      if (toTs   !== null && cellTs > toTs + 24*3600*1000 -1) ok = false;
+    }
+
+    row.style.display = ok ? '' : 'none';
+  });
+}
+document.getElementById('dateFrom').addEventListener('change', filterApplications);
+document.getElementById('dateTo')  .addEventListener('change', filterApplications);
+
+    document.getElementById('searchField').addEventListener('input', filterApplications);
+    document.querySelectorAll('input[name="status"]').forEach(checkbox => {
+      checkbox.addEventListener('change', filterApplications);
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', loadApplications);
+    loadApplications();
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Документ Проверка</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        iframe { width: 100%; height: 70vh; border: none; margin-bottom: 20px; }
+        button { padding: 10px 15px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <iframe src="https://copilotstudio.microsoft.com/environments/Default-3b0b2b05-b124-4b2d-a1e0-fa1761f6cd39/bots/cr532_diabetesComplianceChecker/webchat?__version__=2"></iframe>
+
+    <input type="file" id="document-input">
+    <button id="send-btn" onclick="sendDocument()" disabled>Испрати документ</button>
+
+    <script>
+        const predefinedMessage = "Провери дали моите документи ги исполнуваат условите за регистрација за продажба и дали се исполнуваат сите критериуми и барања за овој производ наменет за лица со дијабетес во Република Северна Македонија, одговори ми на македонски";
+
+        document.getElementById('document-input').addEventListener('change', function(event) {
+            document.getElementById('send-btn').disabled = event.target.files.length === 0;
+        });
+
+        async function sendDocument() {
+            const fileInput = document.getElementById('document-input');
+
+            if (fileInput.files.length > 0) {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('message', predefinedMessage);
+
+                const response = await fetch('https://default3b0b2b05b1244b2da1e0fa1761f6cd.39.environment.api.powerplatform.com/copilotstudio/dataverse-backed/authenticated/bots/cr532_diabetesComplianceChecker/conversations?api-version=2022-03-01-preview', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('Документот е успешно испратен за проверка.');
+                } else {
+                    alert('Настана грешка при испраќањето на документот.');
+                }
+
+                fileInput.value = '';
+                document.getElementById('send-btn').disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
